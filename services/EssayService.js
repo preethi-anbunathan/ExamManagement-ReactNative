@@ -9,7 +9,6 @@ class EssayService {
 
 
     createEssay(essay,examId) {
-        console.log("In CREATE SERVICE Essay"+essay);
         return fetch(ESSAY_API_URL.replace('EID',examId), {
             body: JSON.stringify(essay),
             headers: {
@@ -17,17 +16,13 @@ class EssayService {
             },
             method: 'POST'
         }).then(function (response) {
-            alert("Question has been created!!")
             return response.json();
         })
     }
     deleteEssay(qid) {
-        console.log("In delete service");
-        console.log("API:"+ESSAY_DEL_API_URL+qid);
         return fetch(ESSAY_DEL_API_URL+qid, {
             method: 'DELETE'
         }).then(function (response) {
-            alert("Question has been deleted!!");
             return response;
         })
     }

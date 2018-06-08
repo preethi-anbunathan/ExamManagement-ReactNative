@@ -19,7 +19,6 @@ class ModuleList extends Component {
     fetch('http://10.0.3.2:8080/api/course/' + courseId + '/module')
       .then(response => (response.json()))
       .then(modules => this.setState({modules: modules})).catch(function(err) {
-        console.error("Hey"+err)
         return err;
     })
   }

@@ -29,33 +29,16 @@ class EssayQuestionEditor extends React.Component {
     }
 
     componentDidMount() {
-        console.log('In component did mount- Essay');
         const {navigation} = this.props;
         this.state.examId = navigation.getParam("examId")
         this.state.lessonId = navigation.getParam("lessonId")
-        // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
-        //   .then(response => (response.json()))
-        //   .then(widgets => this.setState({widgets}))
-        //this.findAllExamsForLesson(this.state.lessonId);
-        console.log("ExamID:"+this.state.examId)
     }
     componentWillReceiveProps(newProps){
-        console.log('In component will receive props Essay');
         this.setExamId(newProps.examId);
-        //this.findAllExamsForLesson(newProps.lessonId)
     }
 
     createEssay() {
-    console.log("In create Essay")
         let newessay;
-        // let desc;
-        // let isTrue;
-        //let newtitle;
-        // let point;
-        // title = this.state.title;
-        // desc = this.state.description;
-        // isTrue = this.state.isTrue;
-        // point = this.state.points;
         newessay={
             title:this.state.title,
             desciption : this.state.description,
@@ -64,10 +47,8 @@ class EssayQuestionEditor extends React.Component {
             type: this.state.type
         }
 
-        console.log("Hello logger"+newessay.title);
         this.essayService.createEssay(newessay,this.state.examId)
             .then(this.props.navigation.navigate("QuestionList",{lessonId:this.state.lessonId}));
-        //document.getElementById('titleFld').value = '';
     }
 
     updateForm(newState) {
@@ -97,13 +78,6 @@ class EssayQuestionEditor extends React.Component {
                 <FormValidationMessage>
                     Description is required
                 </FormValidationMessage>
-                {/*<TextInput*/}
-                    {/*multiline = {true}*/}
-                    {/*numberOfLines = {4}*/}
-                    {/*onChangeText={*/}
-                        {/*text => this.updateForm({answer: text})}*/}
-                        {/*value={this.state.text}*/}
-                        {/*/>*/}
                 <FormLabel>Points</FormLabel>
                 <FormInput onChangeText={points => this.updateForm({points: points})}/>
                 <FormValidationMessage>
@@ -132,15 +106,16 @@ class EssayQuestionEditor extends React.Component {
                     backgroundColor="red"
                            color="white"
                            title="Cancel"/>
-
-                <Text h4>Preview</Text>
+                <Text> </Text>
+                <Text> </Text>
                 <Divider
                     style={{
                         backgroundColor:
                             'black' }} />
+                <Text h4>Preview</Text>
+
                 <ScrollView style={{paddingVertical: 10}}>
                     <View style={{paddingHorizontal: 5}}>
-                        <Card style={{height: 400}}>
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <View style={{flex: 1}}>
                                     <Text h4>{this.state.title}</Text>
@@ -158,7 +133,6 @@ class EssayQuestionEditor extends React.Component {
                                 value={this.state.answer}/>
                             </View>
 
-                        </Card>
                     </View>
                 </ScrollView>
 

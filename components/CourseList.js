@@ -11,7 +11,6 @@ class CourseList extends Component {
             .then(courses => {
                 this.setState({courses: courses})
             }).catch(function(err) {
-          console.error("Hey"+err)
             return err;
         })
         this.state = {

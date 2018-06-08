@@ -37,38 +37,27 @@ class AssignmentList extends Component {
     }
 
     componentDidMount() {
-        console.log('In component did mount-Assign');
         const {navigation} = this.props;
         this.state.lessonId = navigation.getParam("lessonId")
-        // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
-        //   .then(response => (response.json()))
-        //   .then(widgets => this.setState({widgets}))
         this.findAllAssignForLesson(this.state.lessonId);
     }
     componentWillReceiveProps(newProps){
-        console.log('In component did mount-Assign');
         const {navigation} = this.props;
         this.state.lessonId = navigation.getParam("lessonId")
-        // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
-        //   .then(response => (response.json()))
-        //   .then(widgets => this.setState({widgets}))
         this.findAllAssignForLesson(this.state.lessonId);
     }
 
     findAllAssignForLesson(lessonId) {
-        console.log('In find all assign');
         this.assignService
             .findAllAssignForLesson(lessonId)
-            .then((widgets) => {this.setAssign(widgets)});
+            .then((widgets) => {this.setState({widgets})});
     }
 
     setAssign(widgets) {
-        console.log('In set Assign');
         this.setState({widgets: widgets})
     }
 
     createAssign() {
-        console.log("In create assign");
         let newAssign;
         newAssign={
             title:this.state.title,
@@ -80,8 +69,6 @@ class AssignmentList extends Component {
             uploadFileLink:this.state.uploadFileLink,
             link:this.state.link
         }
-        console.log("Widget Type:"+newAssign.widgetType);
-        console.log("Widget Title:"+newAssign.title);
         this.assignService
             .createAssign
             (this.state.lessonId,newAssign)
@@ -89,13 +76,9 @@ class AssignmentList extends Component {
     }
 
     deleteAssign(widgetId) {
-
             this.assignService
                 .deleteAssign(widgetId)
-                .then(() => {
-                    this.findAllAssignForLesson
-                    (this.state.lessonId)
-                });
+                .then(this.props.navigation.navigate("AssignmentList",{lessonId:this.state.lessonId}));
 
     }
 
@@ -108,13 +91,14 @@ class AssignmentList extends Component {
                     (widget, index) => (
                         <ListItem
                             onPress={() => this.props.navigation
-                                .navigate("AssignmentViewer", {assignId: widget.id})}
+                                .navigate("AssignmentViewer", {assignId: widget.id, lessonId:this.state.lessonId})}
                             key={index}
                             subtitle={widget.description}
                             title={widget.title}
-                            leftIcon={<Icon
+                            rightIcon={<Icon
                                 reverse
                                 name='trash'
+                                color='red'
                                 type='font-awesome'
                                 size={20}
                                 onPress={() => this.deleteAssign(widget.id)}
@@ -186,17 +170,18 @@ class AssignmentList extends Component {
                         borderWidth: 0,
                         borderRadius: 5,
                     }} title="Add Assignment"
-                               leftIcon={{name:'check'}}
                                onPress={this.createAssign}
                     />
-                    <Text h4>Preview</Text>
+                    <Text> </Text>
+                    <Text> </Text>
                     <Divider
                         style={{
                             backgroundColor:
-                                'blue' }} />
+                                'black' }} />
+                    <Text h4>Preview</Text>
+
                     <ScrollView style={{paddingVertical: 10}}>
                         <View style={{paddingHorizontal: 5}}>
-                            <Card style={{height: 400}}>
                                 <View style={{flex: 1, flexDirection: 'row'}}>
                                     <View style={{flex: 1}}>
                                     <Text h4>{this.state.title}</Text>
@@ -220,7 +205,6 @@ class AssignmentList extends Component {
                                     <Text h4 style={{paddingHorizontal: 5}}> Submit Link</Text>
                                     <TextInput/>
                                 </View>
-                            </Card>
                         </View>
                     </ScrollView>
                 </View>

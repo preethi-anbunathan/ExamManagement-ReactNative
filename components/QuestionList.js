@@ -1,10 +1,7 @@
 import React, {Component} from 'react'
 import {View,ScrollView, Alert} from 'react-native'
 import {Text, ListItem} from 'react-native-elements'
-// import EssayQuestionViewer from '../elements/EssayQuestionViewer'
-// import MultipleChoiceQuestionViewer from '../elements/MultipleChoiceQuestionViewer'
-// import TrueFalseQuestionViewer from '../elements/TrueFalseQuestionViewer'
-// import FillInTheBlanksViewer from '../elements/FillInTheBlanksViewer'
+
 
 const questionList = [
     { title: 'Question 1', subtitle: 'Multiple choice',
@@ -26,10 +23,8 @@ class QuestionList extends Component {
     }
   }
     componentWillReceiveProps(newProps){
-        console.log('In component will receive props');
         const {navigation} = newProps;
         this.state.examId = navigation.getParam("examId")
-        console.log("In ques:"+this.state.examId)
         fetch("http://10.0.3.2:8080/api/exam/"+this.state.examId+"/question")
             .then(response => (response.json()))
             .then(questions => this.setState({questions}))
@@ -38,7 +33,6 @@ class QuestionList extends Component {
   componentDidMount() {
     const {navigation} = this.props;
     this.state.examId = navigation.getParam("examId")
-      console.log("In ques:"+this.state.examId)
     fetch("http://10.0.3.2:8080/api/exam/"+this.state.examId+"/question")
       .then(response => (response.json()))
       .then(questions => this.setState({questions}))
@@ -68,7 +62,7 @@ class QuestionList extends Component {
             title={question.title}/>))}
 
           <View style={{padding:15}}>
-              <Text h4>Please select Question Type to Add</Text>
+              <Text h4>Select the Question type</Text>
               {questionList.map((question,index) =>(
                       <ListItem
                           onPress={() => {

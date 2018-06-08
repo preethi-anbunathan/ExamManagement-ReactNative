@@ -18,7 +18,7 @@ export default class Exam extends React.Component {
             <View style={{padding:15}}>
                 <Text h2>Lists</Text>
                 {questions.map((question,index) =>(
-                    <ListItem key={index} title={question.title} subtitle={question.subtitle} leftIcon={{name: question.icon}}  />
+                    <ListItem key={index} title={question.title} subtitle={question.subtitle}   />
                     )
 
                 )}

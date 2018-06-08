@@ -44,10 +44,8 @@ class EssayQuestionViewer extends React.Component {
         fetch("http://10.0.3.2:8080/api/essay/"+this.state.questionId)
             .then(response => (response.json()))
             .then(essayview => this.setState({essayview}))
-        console.log("ExamID:"+this.state.examId)
     }
     componentWillReceiveProps(newProps){
-        console.log('In component did mount- Essay');
         const {navigation} = this.props;
         this.state.examId = navigation.getParam("examId")
         this.state.lessonId = navigation.getParam("lessonId")
@@ -77,7 +75,6 @@ class EssayQuestionViewer extends React.Component {
                             'black' }} />
                 <View style={{paddingVertical: 10}}>
                     <View style={{paddingHorizontal: 5}}>
-                        <Card style={{height: 400}}>
                             <View style={{flex: 1, flexDirection: 'row'}}>
                                 <View style={{flex: 1}}>
                                     <Text h4>{this.state.essayview.title}</Text>
@@ -103,7 +100,7 @@ class EssayQuestionViewer extends React.Component {
                                                 onPress={this.deleteEssay}/>
                                 </View>
                                 <View style={styles.buttonContainer}>
-                                    <Button	 backgroundColor="orange"
+                                    <Button	 backgroundColor="blue"
                                                 color="white"
                                                 title="Cancel"
                                                 onPress={() =>this.props
@@ -111,7 +108,6 @@ class EssayQuestionViewer extends React.Component {
                                                     .goBack()}/>
                                 </View>
                             </View>
-                        </Card>
                     </View>
                 </View>
 

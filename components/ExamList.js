@@ -31,35 +31,23 @@ class ExamList extends Component {
     }
 
   componentDidMount() {
-    console.log('In component did mount exam lesson id:'+this.state.lessonId);
     const {navigation} = this.props;
     this.state.lessonId = navigation.getParam("lessonId")
-    // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
-    //   .then(response => (response.json()))
-    //   .then(widgets => this.setState({widgets}))
       this.findAllExamsForLesson(this.state.lessonId);
   }
     componentWillReceiveProps(newProps){
-        console.log('In component did mount exam lesson id:'+this.state.lessonId);
         const {navigation} = this.props;
         this.state.lessonId = navigation.getParam("lessonId")
-        // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
-        //   .then(response => (response.json()))
-        //   .then(widgets => this.setState({widgets}))
         this.findAllExamsForLesson(this.state.lessonId);
     }
 
     findAllExamsForLesson(lessonId) {
-    console.log('In find all exams');
-    console.log("EXAM ID:"+this.state.examId);
-    console.log("EXAM PAGE FIND:"+this.state.lessonId);
         this.examService
             .findAllExamsForLesson(lessonId)
             .then((widgets) => {this.setExams(widgets)});
     }
 
     setExams(widgets) {
-    console.log('In set exams');
         this.updateForm({widgets: widgets})
     }
 
@@ -71,9 +59,6 @@ class ExamList extends Component {
             text : this.state.text,
             widgetType : this.state.widgetType
         }
-        console.log("Widget Type:"+newExam.widgetType);
-        console.log("Widget Desc:"+newExam.description);
-        console.log("Exam page lesson id:"+this.state.lessonId);
         this.examService
             .createExam
             (this.state.lessonId,newExam)
@@ -84,7 +69,6 @@ class ExamList extends Component {
     }
 
     deleteExam(widgetId) {
-            console.log("In delete exam");
             this.examService
                 .deleteExam(widgetId)
                 .then(() => {
@@ -108,10 +92,10 @@ class ExamList extends Component {
                       key={index}
                       subtitle={widget.description}
                       title={widget.title}
-                      // leftIcon={{name:'trash-o'}}
-                      leftIcon={<Icon
+                      rightIcon={<Icon
                         reverse
                         name='trash'
+                        color='red'
                         type='font-awesome'
                         size={20}
                         onPress={() => this.deleteExam(widget.id)}
@@ -148,14 +132,16 @@ class ExamList extends Component {
                   borderWidth: 0,
                   borderRadius: 5,
               }} title="Add Exam"
-                         leftIcon={{name:'check'}}
                          onPress={this.createExam}
                          />
-              <Text h4>Preview</Text>
+              <Text/>
+              <Text/>
               <Divider
                   style={{
                       backgroundColor:
-                          'blue' }} />
+                          'black' }} />
+              <Text h4>Preview</Text>
+
               <Text h4>{this.state.title}</Text>
               <Text>{this.state.description}</Text>
           </View>

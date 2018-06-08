@@ -43,94 +43,15 @@ class Home extends React.Component {
                 <FixedHeader/>
 
                 <View style={{padding: 15}}>
-                    <Text h1>Home</Text>
                     <Button title="Courses"
                             onPress={() => this.props.navigation
                                 .navigate('CourseList') } />
-                    <Button title="Go to Screen A"
-                            onPress={() => this.props.navigation
-                                .navigate('ScreenA')}/>
-                    <Button title="Go to Screen B"
-                            onPress={() => this.props.navigation
-                                .navigate('ScreenB')}/>
-                    <Button title="Go to Screen X"
-                            onPress={() => this.props.navigation
-                                .navigate('ScreenX',{'parameter':'some value'})}/>
-                </View>
+                    </View>
 
-                <QuestionTypeChooser/>
-                <QuestionTypePicker/>
-                <Icons/>
-                <TextHeadings/>
-
-                <Exam/>
-                {/*<TrueFalseQuestionEditor/>*/}
-                {/*<Divider*/}
-                    {/*style={{*/}
-                        {/*backgroundColor:*/}
-                            {/*'blue'*/}
-                    {/*}}/>*/}
-                {/*<EssayQuestionEditor/>*/}
-                {/*<Divider*/}
-                    {/*style={{*/}
-                        {/*backgroundColor:*/}
-                            {/*'blue'*/}
-                    {/*}}/>*/}
-                {/*<MultipleChoiceQuestionEditor/>*/}
             </ScrollView>
         )
     }}
 
-class ScreenA extends React.Component {
-    static navigationOptions = {title: "Screen A"}
-    constructor(props) {
-        super(props)
-    }
-    render() {
-        return (
-            <View>
-                <Text h1>Screen A</Text>
-                <Button title="Go Home"
-                        onPress={() =>this.props
-                            .navigation
-                            .goBack()} />
-            </View>
-        )
-    }
-}
-
-class ScreenB extends React.Component {
-    static navigationOptions = {title: "Screen B"}
-    constructor(props) {
-        super(props)
-    }
-    render() {
-        return (
-            <View>
-                <Text h1>Screen B</Text>
-                <Button title="Go Home"
-                        onPress={() =>this.props
-                            .navigation
-                            .goBack()} />
-            </View>
-        )
-    }
-}
-
-class ScreenX extends React.Component {
-    render() {
-
-        const parameter =
-            this.props.navigation.getParam
-            ('parameter', 'some default value');
-
-        return (
-            <View style={{alignItems: 'center'}}>
-                <Text h1>Screen {parameter}</Text>
-            </View>
-        )
-    }
-}
 
 const App = createStackNavigator({
     Home,
@@ -146,23 +67,13 @@ const App = createStackNavigator({
     MultipleChoiceQuestionEditor,
     EssayQuestionEditor,
     AssignmentViewer,
-    // FillInTheBlanksViewer,
+     FillInTheBlanksViewer,
     TrueFalseQuestionViewer,
     EssayQuestionViewer,
-    // MultipleChoiceQuestionViewer,
-    ScreenA,
-    ScreenB,
-    ScreenX
+     MultipleChoiceQuestionViewer,
 });
 export default App
 
-// export default class App extends React.Component {
-//   render() {
-//     return (
-//
-//     );
-//   }
-// }
 
 const styles = StyleSheet.create({
   container: {

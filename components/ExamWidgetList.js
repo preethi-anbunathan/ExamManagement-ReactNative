@@ -16,7 +16,6 @@ class ExamWidgetList extends Component {
     }
 
     componentDidMount() {
-        console.log("Exam widget list lesson id:"+this.state.lessonId)
         const {navigation} = this.props;
         const lessonId = navigation.getParam("lessonId")
         this.setState({lessonId});
@@ -27,13 +26,12 @@ class ExamWidgetList extends Component {
             <View>
                 <View style={{paddingHorizontal:5, paddingTop:10}}>
                     <Button buttonStyle={{
-                        backgroundColor: "rgba(0,0,0,0.5)",
+                        backgroundColor: "rgba(1,0.5,0,0.5)",
 
                         borderColor: "transparent",
                         borderWidth: 0,
                         borderRadius: 5,
                     }} title="Assignments"
-                            leftIcon={{name:'assignment'}}
                             onPress={() => this.props.navigation
                                 .navigate('AssignmentList', {lessonId: this.state.lessonId})}
                             containerStyle={{marginVertical: 20, marginHorizontal:20}}/>
@@ -46,7 +44,6 @@ class ExamWidgetList extends Component {
                         borderWidth: 0,
                         borderRadius: 5,
                     }} title="Exams"
-                            leftIcon={{name:'edit'}}
                             onPress={() => this.props.navigation
                                 .navigate('ExamList', {lessonId: this.state.lessonId})}
                             containerStyle={{marginVertical: 20}}/>
