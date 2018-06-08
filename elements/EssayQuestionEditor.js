@@ -16,7 +16,8 @@ class EssayQuestionEditor extends React.Component {
             points: 0,
             answer: '',
             type: 'essay',
-            examId: ''
+            examId: '',
+            lessonId:''
         }
         this.createEssay = this.createEssay.bind(this);
         this.setExamId = this.setExamId.bind(this);
@@ -31,6 +32,7 @@ class EssayQuestionEditor extends React.Component {
         console.log('In component did mount- Essay');
         const {navigation} = this.props;
         this.state.examId = navigation.getParam("examId")
+        this.state.lessonId = navigation.getParam("lessonId")
         // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
         //   .then(response => (response.json()))
         //   .then(widgets => this.setState({widgets}))
@@ -64,7 +66,7 @@ class EssayQuestionEditor extends React.Component {
 
         console.log("Hello logger"+newessay.title);
         this.essayService.createEssay(newessay,this.state.examId)
-            .then(this.props.navigation.navigate("ExamList"));
+            .then(this.props.navigation.navigate("QuestionList",{lessonId:this.state.lessonId}));
         //document.getElementById('titleFld').value = '';
     }
 

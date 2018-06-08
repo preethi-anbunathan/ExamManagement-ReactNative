@@ -1,45 +1,81 @@
-import React from 'react'
-import {View, TextInput,ScrollView} from 'react-native'
-import {Text, Button, CheckBox} from 'react-native-elements'
-import {FormLabel, FormInput, FormValidationMessage}
-    from 'react-native-elements'
+import React, {Component} from 'react'
+import {View, ScrollView} from 'react-native'
+import {Text, Button, CheckBox, Divider} from 'react-native-elements'
+import {FormLabel, FormInput, FormValidationMessage} from 'react-native-elements'
+import FillInTheBlanksService from '../services/FillInTheBlanksService'
 
-
-
-
-class FillInTheBlanksEditor extends React.Component {
-    static navigationOptions = { title: "Fill in the Blanks"}
+class FillInTheBlanksEditor extends Component {
+    static navigationOptions = { title: "Fill in the blanks"}
     constructor(props) {
-        super(props)
+        super(props);
+
         this.state = {
             title: '',
             description: '',
-            variables: '',
             points: 0,
-            instructions:'Fill in the blanks'
+            variables: '',
+            type: 'blanks',
+            examId:''
+        };
+        this.createBlanks = this.createBlanks.bind(this);
+        this.setExamId = this.setExamId.bind(this);
+        this.fillInTheBlanksService = FillInTheBlanksService.instance;
+    }
+
+    setExamId(examId) {
+        this.setState({examId: examId});
+    }
+
+    componentDidMount() {
+        console.log('In component did mount- Blanks');
+        const {navigation} = this.props;
+        this.state.examId = navigation.getParam("examId")
+        // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
+        //   .then(response => (response.json()))
+        //   .then(widgets => this.setState({widgets}))
+        //this.findAllExamsForLesson(this.state.lessonId);
+        console.log("ExamID:"+this.state.examId)
+    }
+    componentWillReceiveProps(newProps){
+        console.log('In component will receive props Blanks');
+        this.setExamId(newProps.examId);
+        //this.findAllExamsForLesson(newProps.lessonId)
+    }
+
+    createBlanks() {
+
+        let newblank;
+        // let desc;
+        // let isTrue;
+        //let newtitle;
+        // let point;
+        // title = this.state.title;
+        // desc = this.state.description;
+        // isTrue = this.state.isTrue;
+        // point = this.state.points;
+        newblank={
+            title:this.state.title,
+            desciption : this.state.description,
+            variables : this.state.variables,
+            points : this.state.points,
+            type: this.state.type
         }
 
-        this.updateForm = this.updateForm.bind(this)
-        // this.saveQuestion = this.saveQuestion.bind(this)
 
+        console.log("Hello logger"+newblank.variables);
+        this.fillInTheBlanksService.createBlanks(newblank,this.state.examId)
+            .then(this.props.navigation.navigate("ExamList"));
+        //document.getElementById('titleFld').value = '';
     }
 
 
     updateForm(newState) {
         this.setState(newState)
     }
-
-
-    renderBlanks(){
-        var str = this.state.variables
-        var cur= str.replace(/\[(.+?)\]/g, "______")
-        return cur
-    }
-
-
     render() {
         return(
-            <View>
+            <ScrollView>
+                <Text h3>Fill in the Blanks Question Model</Text>
                 <FormLabel>Title</FormLabel>
                 <FormInput onChangeText={
                     text => this.updateForm({title: text})
@@ -49,44 +85,51 @@ class FillInTheBlanksEditor extends React.Component {
                 </FormValidationMessage>
 
                 <FormLabel>Description</FormLabel>
-                <FormInput onChangeText={
-                    text => this.updateForm({description: text})
-                }
-                />
+                <FormInput
+                    multiline={true} numberOfLines={4}
+                    onChangeText={
+                        text => this.updateForm({description: text})
+                    }/>
                 <FormValidationMessage>
                     Description is required
                 </FormValidationMessage>
 
-                <FormLabel>Variables</FormLabel>
-                <FormInput onChangeText={
-                    text => this.updateForm({variables: text})
-                }
-                />
-                <FormValidationMessage>
-                    Variable is required
-                </FormValidationMessage>
-
                 <FormLabel>Points</FormLabel>
-                <FormInput  onChangeText={
-                    text => this.updateForm({points: text})
-                }/>
+                <FormInput onChangeText={points => this.updateForm({points: points})}/>
                 <FormValidationMessage>
                     Points is required
                 </FormValidationMessage>
 
                 <Button	backgroundColor="green"
                            color="white"
-                           title="Save"/>
-                <Button	backgroundColor="red"
-                           color="white"
-                           title="Cancel"/>
+                           title="Save"
+                           onPress={this.createBlanks}/>
+                <Button
+                    onPress={() =>this.props
+                        .navigation
+                        .goBack()}
+                    backgroundColor="red"
+                    color="white"
+                    title="Cancel"/>
 
-                <Text h3>Preview</Text>
-                <Text h2>{this.state.title}</Text>
-                <Text>{this.state.description}</Text>
-                <Text>{this.renderBlanks()}</Text>
+                <Text h4>Preview</Text>
+                <Divider
+                    style={{
+                        backgroundColor:
+                            'blue' }} />
+                {/*<Text h4>{this.state.title}</Text>*/}
 
-            </View>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View style={{flex: 1}}>
+                        <Text h4>{this.state.title}</Text>
+                        <Text>{this.state.description}</Text>
+                    </View>
+                    <View style={{flex: 1}}>
+                        <Text style={{textAlign: 'right'}}>{this.state.points} pts</Text>
+                    </View>
+                </View>
+
+            </ScrollView>
         )
     }
 }

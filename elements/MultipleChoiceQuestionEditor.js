@@ -1,54 +1,83 @@
-import React from 'react'
-import {View} from 'react-native'
-import {Text, Button, CheckBox, Icon} from 'react-native-elements'
-import {FormLabel, FormInput, FormValidationMessage,ListItem}
-    from 'react-native-elements'
-import RadioForm from 'react-native-radio-form';
+import React, {Component} from 'react'
+import {View, ScrollView} from 'react-native'
+import {Text, Button, CheckBox, Divider} from 'react-native-elements'
+import {FormLabel, FormInput, FormValidationMessage} from 'react-native-elements'
+import MultipleChoiceService from '../services/MultipleChoiceService'
 
-class MultipleChoiceQuestionEditor extends React.Component {
+class MultipleChoiceQuestionEditor extends Component {
     static navigationOptions = { title: "Multiple Choice"}
     constructor(props) {
-        super(props)
+        super(props);
+
         this.state = {
             title: '',
             description: '',
             points: 0,
+            type: 'multi',
             options: '',
-            choices: [],
-            correctOption: ''
+            correctOption :'',
+            examId:''
+        };
+        this.createMulti = this.createMulti.bind(this);
+        this.setExamId = this.setExamId.bind(this);
+        this.multipleChoiceService = MultipleChoiceService.instance;
+    }
+
+    setExamId(examId) {
+        this.setState({examId: examId});
+    }
+
+    componentDidMount() {
+        console.log('In component did mount- Multi');
+        const {navigation} = this.props;
+        this.state.examId = navigation.getParam("examId")
+        // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
+        //   .then(response => (response.json()))
+        //   .then(widgets => this.setState({widgets}))
+        //this.findAllExamsForLesson(this.state.lessonId);
+        console.log("ExamID:"+this.state.examId)
+    }
+    componentWillReceiveProps(newProps){
+        console.log('In component will receive props Multi');
+        this.setExamId(newProps.examId);
+        //this.findAllExamsForLesson(newProps.lessonId)
+    }
+
+    createMulti() {
+
+        let newmulti;
+        // let desc;
+        // let isTrue;
+        //let newtitle;
+        // let point;
+        // title = this.state.title;
+        // desc = this.state.description;
+        // isTrue = this.state.isTrue;
+        // point = this.state.points;
+        newmulti={
+            title:this.state.title,
+            desciption : this.state.description,
+            points : this.state.points,
+            type: this.state.type,
+            options: this.state.options,
+            correctOption: this.state.correctOption
         }
 
-        this.updateForm = this.updateForm.bind(this);
-        this.addChoice = this.addChoice.bind(this);
+
+        console.log("Hello logger"+newmulti.correctOption);
+        this.multipleChoiceService.createMulti(newmulti,this.state.examId)
+            .then(this.props.navigation.navigate("ExamList"));
+        //document.getElementById('titleFld').value = '';
     }
+
 
     updateForm(newState) {
         this.setState(newState)
     }
-
-    addChoice(newChoice) {
-        this.setState({ choices: [ ...this.state.choices, {
-                option: newChoice
-            }]})
-    }
-
-    setCorrectOption (index, value) {
-            this.setState({
-                correctOption: value
-            })
-        console.log(this.state.correctOption)
-    }
-
-    deleteOption (index) {
-        var array= this.state.choices
-        array.splice(index, 1)
-        this.setState ({choices: array})
-    }
-
-
     render() {
         return(
-            <View>
+            <ScrollView>
+                <Text h3>Multiple Choice Question Model</Text>
                 <FormLabel>Title</FormLabel>
                 <FormInput onChangeText={
                     text => this.updateForm({title: text})
@@ -58,88 +87,53 @@ class MultipleChoiceQuestionEditor extends React.Component {
                 </FormValidationMessage>
 
                 <FormLabel>Description</FormLabel>
-                <FormInput onChangeText={
-                    text => this.updateForm({description: text})
-                }/>
+                <FormInput
+                    multiline={true} numberOfLines={4}
+                    onChangeText={
+                        text => this.updateForm({description: text})
+                    }/>
                 <FormValidationMessage>
                     Description is required
                 </FormValidationMessage>
 
-                <FormLabel>Choices</FormLabel>
-                <FormInput onChangeText={
-                    text => this.updateForm({options: text})
-                }/>
+                <FormLabel>Points</FormLabel>
+                <FormInput onChangeText={points => this.updateForm({points: points})}/>
                 <FormValidationMessage>
-                    Choice is required
+                    Points is required
                 </FormValidationMessage>
-                <Button title="Add Choice"
-                        onPress={() => this.addChoice
-                        (this.state.options)}/>
 
-                {this.state.choices.map(
-                    (choice, index) => (
-                        <ListItem
-                            key={index}
-                            title={choice.option}
-                            leftIcon={<Icon
-                                reverse
-                                name='circle'
-                                type='font-awesome'
-                                size={2}
-                                onPress={() => this.setCorrectOption(index, choice)}
-                                style={{paddingRight:20}}
-                            />}
-                            rightIcon={ <Icon
-                                reverse
-                                name='trash'
-                                type='font-awesome'
-                                size={10}
-                                onPress={() => this.deleteOption(index)}
-                                style={{paddingRight:20}}
-                            />}
-                        />
-                    ))}
-
-                <FormValidationMessage>
-                    Click on the left icon to chose the correct option
-                </FormValidationMessage>
 
 
                 <Button	backgroundColor="green"
                            color="white"
-                           title="Save"/>
-                <Button	backgroundColor="red"
-                           color="white"
-                           title="Cancel"/>
+                           title="Save"
+                           onPress={this.createMulti}/>
+                <Button
+                    onPress={() =>this.props
+                        .navigation
+                        .goBack()}
+                    backgroundColor="red"
+                    color="white"
+                    title="Cancel"/>
 
-                <Text h3>Preview</Text>
-                <Text h2>{this.state.title}</Text>
-                <Text>{this.state.description}</Text>
-                <View>
-                    {this.state.choices.map(
-                        (choice, index) => (
-                            <ListItem
-                                key={index}
-                                title={choice.option}
-                                leftIcon={<Icon
-                                    reverse
-                                    name='circle'
-                                    type='font-awesome'
-                                    size={2}
-                                   // onPress={() => this.setCorrectOption(index, choice)}
-                                    style={{paddingRight:20}}
-                                />}
-                                // rightIcon={ <Icon
-                                //     reverse
-                                //     name='trash'
-                                //     type='font-awesome'
-                                //     size={5}
-                                //     onPress={() => this.deleteOption(index)}
-                                //     style={{paddingRight:20}}
-                                // />}
-                            />))}
+                <Text h4>Preview</Text>
+                <Divider
+                    style={{
+                        backgroundColor:
+                            'blue' }} />
+                {/*<Text h4>{this.state.title}</Text>*/}
+
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <View style={{flex: 1}}>
+                        <Text h4>{this.state.title}</Text>
+                        <Text>{this.state.description}</Text>
+                    </View>
+                    <View style={{flex: 1}}>
+                        <Text style={{textAlign: 'right'}}>{this.state.points} pts</Text>
+                    </View>
                 </View>
-            </View>
+
+            </ScrollView>
         )
     }
 }

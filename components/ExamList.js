@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Alert} from 'react-native'
+import {View, Alert, ScrollView} from 'react-native'
 import {Text, ListItem, FormLabel, FormInput, FormValidationMessage, Button, Divider, Icon} from 'react-native-elements'
 import ExamService from '../services/ExamService'
 
@@ -31,7 +31,7 @@ class ExamList extends Component {
     }
 
   componentDidMount() {
-    console.log('In component did mount');
+    console.log('In component did mount exam lesson id:'+this.state.lessonId);
     const {navigation} = this.props;
     this.state.lessonId = navigation.getParam("lessonId")
     // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
@@ -40,13 +40,19 @@ class ExamList extends Component {
       this.findAllExamsForLesson(this.state.lessonId);
   }
     componentWillReceiveProps(newProps){
-        console.log('In component will receive props');
-        this.setLessonId(newProps.lessonId);
-        //this.findAllExamsForLesson(newProps.lessonId)
+        console.log('In component did mount exam lesson id:'+this.state.lessonId);
+        const {navigation} = this.props;
+        this.state.lessonId = navigation.getParam("lessonId")
+        // fetch("http://10.0.3.2:8080/api/lesson/"+lessonId+"/examwidget")
+        //   .then(response => (response.json()))
+        //   .then(widgets => this.setState({widgets}))
+        this.findAllExamsForLesson(this.state.lessonId);
     }
 
     findAllExamsForLesson(lessonId) {
     console.log('In find all exams');
+    console.log("EXAM ID:"+this.state.examId);
+    console.log("EXAM PAGE FIND:"+this.state.lessonId);
         this.examService
             .findAllExamsForLesson(lessonId)
             .then((widgets) => {this.setExams(widgets)});
@@ -54,7 +60,7 @@ class ExamList extends Component {
 
     setExams(widgets) {
     console.log('In set exams');
-        this.setState({widgets: widgets})
+        this.updateForm({widgets: widgets})
     }
 
     createExam() {
@@ -65,29 +71,34 @@ class ExamList extends Component {
             text : this.state.text,
             widgetType : this.state.widgetType
         }
-
+        console.log("Widget Type:"+newExam.widgetType);
+        console.log("Widget Desc:"+newExam.description);
+        console.log("Exam page lesson id:"+this.state.lessonId);
         this.examService
             .createExam
             (this.state.lessonId,newExam)
             .then(() => {
-                this.findAllExamsForLesson
-                (this.state.lessonId);
+                this.props.navigation.navigate
+                ("ExamList",{lessonId:this.state.lessonId});
             })
     }
 
     deleteExam(widgetId) {
+            console.log("In delete exam");
             this.examService
                 .deleteExam(widgetId)
                 .then(() => {
-                    this.findAllExamsForLesson
-                    (this.state.lessonId)
+                    this.props.navigation.navigate
+                    ("ExamList",{lessonId:this.state.lessonId});
                 });
 
     }
 
+
+
     render() {
     return(
-      <View style={{padding: 15}}>
+      <ScrollView style={{padding: 15}}>
           {this.state.widgets.map(
               (widget, index) => (
                   <ListItem
@@ -148,7 +159,7 @@ class ExamList extends Component {
               <Text h4>{this.state.title}</Text>
               <Text>{this.state.description}</Text>
           </View>
-      </View>
+      </ScrollView>
     )
   }
 }

@@ -13,6 +13,7 @@ class LessonList extends Component {
     }
   }
   componentDidMount() {
+
     const {navigation} = this.props;
     const courseId = navigation.getParam("courseId")
     const moduleId = navigation.getParam("moduleId")

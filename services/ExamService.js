@@ -12,18 +12,23 @@ export default class ExamService {
     }
 
     createExam(lessonId, exam) {
+        console.log("In create exam service")
         return fetch(EXAM_API_URL.replace('LID', lessonId),
             { body: JSON.stringify(exam),
                 headers: { 'Content-Type': 'application/json' },
                 method: 'POST'
             }).then(function (response)
-        { return response.json(); })
+        { alert("Exam created successfully")
+            return response.json(); })
     }
 
     deleteExam(examId) {
         return fetch(EXAM_DEL_API_URL.replace
         ('EID', examId), {
             method: 'delete'
+        }).then(function (response) {
+            alert("Exam has been deleted!!");
+            return response;
         })
     }
 
